@@ -2,6 +2,10 @@ package den.project.catalog.controller;
 
 import den.project.catalog.model.Products;
 import den.project.catalog.repository.ProductsRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,13 +19,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(description = "Endpoints for Creating, Retrieving, Updating and Deleting of Products.",
+        tags = {"products"})
 public class ProductsController {
 
     @Autowired
     private ProductsRepository repository;
 
+    @ApiOperation(value = "Find Products by name", notes = "Name search by %name% format", tags = {"products"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = List.class)})
     @GetMapping
-    // @Produces("application/json")//сериализация, для формата XML - "application/xml"
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ResponseEntity<List<Products>> getAllProducts() {
         List<Products> productsList;
@@ -30,38 +38,35 @@ public class ProductsController {
     }
 
     @GetMapping("/{id}")
-    // @Produces("application/json")//сериализация, для формата XML - "application/xml"
     public Products getById(@PathVariable int id) {
         Products products = repository.get(id);
         if (products == null) {
-            ///Response.status(404).build();
             return null;
         } else {
-            //Response.status(200).entity(products);
             return products;
         }
     }
 
+    @ApiOperation(value = "Delete a product", tags = {"products"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation"),
+            @ApiResponse(code = 404, message = "Product not found")})
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProducts(@PathVariable int id) {
         Products products = repository.get(id);
         if (products != null) {
             repository.delete(id);
-            //      Response.status(200).build();
         }
-        //   Response.status(404).build();
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    //  @Consumes("application/json")//ДЕсериализация, для формата XML - "application/xml"
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Products> create(@RequestBody Products p) {
         Products products = repository.save(p);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/")
                 .buildAndExpand(p.getId()).toUri();
-        //   Response.status(201).entity(products).build();
         return ResponseEntity.created(uriOfNewResource).body(products);
     }
 

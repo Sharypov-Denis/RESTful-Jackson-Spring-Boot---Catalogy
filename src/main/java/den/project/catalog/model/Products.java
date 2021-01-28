@@ -1,19 +1,27 @@
 package den.project.catalog.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.Hibernate;
-import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
+@ApiModel(description = "Class representing a product in the application.")
 @Entity
 @Table(name = "products")
 public class Products {
 
+
+    @ApiModelProperty(notes = "Unique identifier of the Product.",
+            example = "1", required = true, position = 0)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
     @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1)//добавил, т.к. hibernate ругается The increment size of the [global_seq] sequence is set to [50] in the entity mapping while the associated database sequence increment
     private Integer id;
 
+    @ApiModelProperty(notes = "Name of the Product.",
+            example = "Milk", required = true, position = 1)
     @NotBlank
     @Column(name = "name", nullable = false, unique = true)
     private String name;
