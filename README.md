@@ -14,6 +14,6 @@
 * HSQLDB
 * Stream API
 * Maven
-* Swagger
+* Swagger (http://localhost:8080/swagger-ui.html)
 
 Developing in IntelliJ IDEA Ultimate
