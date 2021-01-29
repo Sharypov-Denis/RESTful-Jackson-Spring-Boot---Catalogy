@@ -37,6 +37,10 @@ public class ProductsController {
         return ResponseEntity.ok().body(productsList);
     }
 
+    @ApiOperation(value = "finding the product by id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response=Products.class),
+            @ApiResponse(code = 404, message = "Product not found") })
     @GetMapping("/{id}")
     public Products getById(@PathVariable int id) {
         Products products = repository.get(id);
@@ -60,16 +64,25 @@ public class ProductsController {
         }
     }
 
+    @ApiOperation(value = "Create the product")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Product created"),
+            @ApiResponse(code = 400, message = "Invalid input"),
+            @ApiResponse(code = 409, message = "Product already exists") })
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Products> create(@RequestBody Products p) {
         Products products = repository.save(p);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/")
+                .path("/products")
                 .buildAndExpand(p.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(products);
     }
 
+    @ApiOperation(value = "Update the product by id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation"),
+            @ApiResponse(code = 404, message = "Product not found") })
     @PutMapping("/update/{id}")
     public ResponseEntity<Products> update(@RequestBody Products products,
                                            @PathVariable("id") int id) throws EntityNotFoundException {

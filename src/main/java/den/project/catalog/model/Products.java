@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 @Table(name = "products")
 public class Products {
 
-
     @ApiModelProperty(notes = "Unique identifier of the Product.",
             example = "1", required = true, position = 0)
     @Id
