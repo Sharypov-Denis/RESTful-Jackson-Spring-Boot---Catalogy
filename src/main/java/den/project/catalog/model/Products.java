@@ -1,5 +1,6 @@
 package den.project.catalog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.Hibernate;
@@ -70,6 +71,7 @@ public class Products {
         this.description = description;
     }
 
+    @JsonIgnore
     public boolean isNew() {
         return this.id == null;
     }
